@@ -6,7 +6,7 @@
   "typings": "index.d.ts",
   "scripts": {
     "test": "run-script-os",
-    "test:darwin:linux": "jasmine 'test/**/*.js'",
+    "test:darwin:linux": "jasmine test/**/*.js",
     "test-keyboard": "node test/keyboard.js",
     "test:win32": "jasmine test/**/*.js",
     "install": "prebuild-install || node-gyp rebuild",
@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/octalmage/robotjs",
   "dependencies": {
-    "nan": "^2.14.0",
+    "nan": "^2.14.2",
     "prebuild-install": "^5.3.3"
   },
   "devDependencies": {
