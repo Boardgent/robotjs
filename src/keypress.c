@@ -3,6 +3,7 @@
 #include "microsleep.h"
 
 #include <ctype.h> /* For isupper() */
+#include <limits.h>
 
 #if defined(IS_MACOSX)
 	#include <ApplicationServices/ApplicationServices.h>
@@ -191,9 +192,14 @@ void tapKeyCode(MMKeyCode code, MMKeyFlags flags)
 	toggleKeyCode(code, false, flags);
 }
 
-void toggleKey(char c, const bool down, MMKeyFlags flags)
+bool toggleKey(char c, const bool down, MMKeyFlags flags)
 {
 	MMKeyCode keyCode = keyCodeForChar(c);
+	if (keyCode == UINT_MAX)
+	{
+		return false;
+	}
+	
 
 	//Prevent unused variable warning for Mac and Linux.
 #if defined(IS_WINDOWS)
@@ -212,6 +218,7 @@ void toggleKey(char c, const bool down, MMKeyFlags flags)
     keyCode = keyCode & 0xff; // Mask out modifiers.
 #endif
 	toggleKeyCode(keyCode, down, flags);
+	return true;
 }
 
 void tapKey(char c, MMKeyFlags flags)
@@ -266,6 +273,13 @@ void unicodeTap(const unsigned value)
 		toggleUnicode(ch, true);
 		toggleUnicode(ch, false);
 	#elif defined(IS_WINDOWS)
+		bool result = toggleKey(value, true, MOD_NONE);
+		if (result)
+		{
+			toggleKey(value, false, MOD_NONE);
+			return;
+		}
+		
 		INPUT ip;
 
 		// Set up a generic keyboard event.
